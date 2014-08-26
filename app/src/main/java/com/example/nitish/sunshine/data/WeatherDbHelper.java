@@ -11,7 +11,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "weather.db";
     private static final int DATABASE_VERSION = 1;
 
-    public WeatherDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public WeatherDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -21,9 +21,8 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
         // location setting, the city name, and the latitude and longitude
 
         final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
-        LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-        LocationEntry.COLUMN_LOCATION_ID + " INTEGER NOT NULL, " +
-        LocationEntry.COLUMN_CITY_NAME + " TEXT NOT NULL, " +
+        LocationEntry._ID + " INTEGER PRIMARY KEY, " +
+        LocationEntry.COLUMN_CITY_NAME + " TEXT UNIQUE NOT NULL, " +
         LocationEntry.COLUMN_PINCODE + " TEXT NOT NULL, " +
         LocationEntry.COLUMN_LAT + " REAL NOT NULL, " +
         LocationEntry.COLUMN_LNG + " REAL NOT NULL, " +
