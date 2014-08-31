@@ -31,6 +31,10 @@
             android:label="@string/action_settings"
             android:parentActivityName=".MainActivity">
         </activity>
+
+        <provider
+            android:authorities="com.example.nitish.sunshine"
+            android:name=".data.WeatherProvider" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
