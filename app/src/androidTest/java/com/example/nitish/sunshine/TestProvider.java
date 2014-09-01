@@ -14,6 +14,10 @@ public class TestProvider extends AndroidTestCase {
 
     final String LOG_TAG = "Inside Tests";
 
+    public static String TEST_CITY_NAME = "Mumbai";
+    public static String TEST_PINCODE = "400027";
+    public static String TEST_DATE = "20141208";
+
     public void testDeleteDb() throws Throwable {
         mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
     }
@@ -26,20 +30,17 @@ public class TestProvider extends AndroidTestCase {
         // vnd.android.cursor.dir/com.example.android.sunshine.app/weather
         assertEquals(WeatherEntry.CONTENT_TYPE, type);
 
-        String testLocation = "94074";
-
         // content://com.example.android.sunshine.app/weather/94074
         type = mContext.getContentResolver().getType(
-                WeatherEntry.buildWeatherLocation(testLocation));
+                WeatherEntry.buildWeatherLocation(TEST_PINCODE));
 
         // vnd.android.cursor.dir/com.example.android.sunshine.app/weather
         assertEquals(WeatherEntry.CONTENT_TYPE, type);
 
-        String testDate = "20140612";
 
         // content://com.example.android.sunshine.app/weather/94074/20140612
         type = mContext.getContentResolver().getType(
-                WeatherEntry.buildWeatherLocationWithDate(testLocation, testDate));
+                WeatherEntry.buildWeatherLocationWithDate(TEST_PINCODE, TEST_DATE));
 
         // vnd.android.cursor.item/com.example.android.sunshine.app/weather
         assertEquals(WeatherEntry.CONTENT_ITEM_TYPE, type);
@@ -59,8 +60,6 @@ public class TestProvider extends AndroidTestCase {
 
     public void testInsertReadProvider() {
 
-        String city_name = "Mumbai";
-        String pincode = "400027";
         double lat = 18.9902;
         double lng = 72.8314;
 
@@ -69,8 +68,8 @@ public class TestProvider extends AndroidTestCase {
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(LocationEntry.COLUMN_PINCODE, pincode);
-        values.put(LocationEntry.COLUMN_CITY_NAME, city_name);
+        values.put(LocationEntry.COLUMN_PINCODE, TEST_PINCODE);
+        values.put(LocationEntry.COLUMN_CITY_NAME, TEST_CITY_NAME);
         values.put(LocationEntry.COLUMN_LAT, lat);
         values.put(LocationEntry.COLUMN_LNG, lng);
         long locationRowId = db.insert(LocationEntry.TABLE_NAME, null, values);
@@ -94,8 +93,8 @@ public class TestProvider extends AndroidTestCase {
             String location = cursor.getString(locationIndex);
             int nameIndex = cursor.getColumnIndex((LocationEntry.COLUMN_CITY_NAME));
             String name = cursor.getString(nameIndex);
-            assertEquals(city_name, name);
-            assertEquals(pincode, location);
+            assertEquals(TEST_CITY_NAME, name);
+            assertEquals(TEST_PINCODE, location);
         }
 
 
@@ -121,15 +120,15 @@ public class TestProvider extends AndroidTestCase {
             // Hooray, data was returned! Assert that it's the right data, and that the database
             // creation code is working as intended.
             // Then take a break. We both know that wasn't easy.
-            assertEquals(city_name, name);
-            assertEquals(pincode, location);
+            assertEquals(TEST_CITY_NAME, name);
+            assertEquals(TEST_PINCODE, location);
             assertEquals(lat, latitude);
             assertEquals(lng, longitude);
 
             // Fantastic. Now that we have a location, add some weather!
             ContentValues weatherValues = new ContentValues();
             weatherValues.put(WeatherEntry.COLUMN_LOC_KEY, locationRowId);
-            weatherValues.put(WeatherEntry.COLUMN_DATETEXT, "20141205");
+            weatherValues.put(WeatherEntry.COLUMN_DATETEXT, TEST_DATE);
             weatherValues.put(WeatherEntry.COLUMN_DEGREES, 1.1);
             weatherValues.put(WeatherEntry.COLUMN_HUMIDITY, 1.2);
             weatherValues.put(WeatherEntry.COLUMN_PRESSURE, 1.3);
@@ -157,12 +156,68 @@ public class TestProvider extends AndroidTestCase {
                 int dateIndex = weather_cursor.getColumnIndex((WeatherEntry.COLUMN_DATETEXT));
                 String date_text = weather_cursor.getString(dateIndex);
 
-                assertEquals("20141205", date_text);
+                assertEquals(TEST_DATE, date_text);
             } else {
                 fail("No Weather data returned :(");
             }
 
-            dbHelper.close();
+            weather_cursor.close();
+
+            weather_cursor = mContext.getContentResolver().query(WeatherEntry.buildWeatherLocation(TEST_PINCODE),
+                    null,
+                    null,
+                    null,
+                    null);
+
+            if(weather_cursor.moveToFirst()) {
+
+                int dateIndex = weather_cursor.getColumnIndex((WeatherEntry.COLUMN_DATETEXT));
+                String date_text = weather_cursor.getString(dateIndex);
+
+                assertEquals(TEST_DATE, date_text);
+            } else {
+                fail("No Weather data returned :(");
+            }
+
+            weather_cursor.close();
+
+            weather_cursor = mContext.getContentResolver().query(WeatherEntry.buildWeatherLocationWithStartDate(TEST_PINCODE, TEST_DATE),
+                    null,
+                    null,
+                    null,
+                    null);
+
+            if(weather_cursor.moveToFirst()) {
+
+                int dateIndex = weather_cursor.getColumnIndex((WeatherEntry.COLUMN_DATETEXT));
+                String date_text = weather_cursor.getString(dateIndex);
+
+                assertEquals(TEST_DATE, date_text);
+            } else {
+                fail("No Weather data returned :(");
+            }
+
+            weather_cursor.close();
+
+
+            weather_cursor = mContext.getContentResolver().query(WeatherEntry.buildWeatherLocationWithDate(TEST_PINCODE, TEST_DATE),
+                    null,
+                    null,
+                    null,
+                    null);
+
+            if(weather_cursor.moveToFirst()) {
+
+                int dateIndex = weather_cursor.getColumnIndex((WeatherEntry.COLUMN_DATETEXT));
+                String date_text = weather_cursor.getString(dateIndex);
+
+                assertEquals(TEST_DATE, date_text);
+            } else {
+                fail("No Weather data returned :(");
+            }
+
+            weather_cursor.close();
+
         } else {
             fail("No values returned :(");
         }
