@@ -11,6 +11,13 @@
     <string name="pref_pincode_key">pincode</string>
     <string name="pref_pincode_title">Location</string>
     <string name="pref_pincode_summary">Enter your pin code. Ex. 400001</string>
+    <string name="pref_pincode_default">400104</string>
+
+    <!-- Value in SharedPreferences for metric temperature unit option [CHAR LIMIT=NONE] -->
+    <string name="pref_units_metric" translatable="false">metric</string>
+
+    <!-- Value in SharedPreferences for imperial temperature unit option [CHAR LIMIT=NONE] -->
+    <string name="pref_units_imperial" translatable="false">imperial</string>
 
     <string name="pref_unit_key">unit</string>
     <string name="pref_unit_title">Temperature Units</string>

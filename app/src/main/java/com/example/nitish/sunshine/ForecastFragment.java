@@ -50,11 +50,13 @@ public class ForecastFragment extends Fragment {
     }
 
     private void updateWeather() {
-        SharedPreferences pincode_preference = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        String pincode = Utility.getPreferredLocation(getActivity().getApplicationContext());
 
-        String pincode = pincode_preference.getString("pincode", "400004");
+        forecast_adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.list_item_forecast, R.id.list_item_forecast_textview, new ArrayList<String>());
 
-        new FetchWeatherTask().execute(pincode);
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), forecast_adapter);
+        weatherTask.execute(pincode);
 
         /*Toast.makeText(getActivity().getApplicationContext(), pincode, Toast.LENGTH_SHORT).show();*/
     }
@@ -63,8 +65,8 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        forecast_adapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_forecast, R.id.list_item_forecast_textview, new ArrayList<String>());
+        /*forecast_adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.list_item_forecast, R.id.list_item_forecast_textview, new ArrayList<String>());*/
 
 
 
@@ -109,7 +111,7 @@ public class ForecastFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
+    public class FetchWeatherTaskOriginal extends AsyncTask<String, Void, String[]> {
         protected String[] doInBackground(String...params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
