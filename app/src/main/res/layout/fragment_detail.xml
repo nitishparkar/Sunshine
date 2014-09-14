@@ -66,8 +66,7 @@
                 <ImageView
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:id="@+id/imageView"
-                    android:src="@drawable/ic_launcher" />
+                    android:id="@+id/imageView" />
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="fill_parent" android:layout_height="wrap_content"

@@ -9,6 +9,8 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.nitish.sunshine.data.WeatherContract;
+
 /**
  * Created by nitish on 9/9/14.
  */
@@ -61,12 +63,20 @@ public class ForecastAdapter extends CursorAdapter {
         float high = cursor.getFloat(ForecastFragment.COL_WEATHER_MAX_TEMP);
         float low = cursor.getFloat(ForecastFragment.COL_WEATHER_MIN_TEMP);
 
-        viewHolder.iconView.setImageResource(R.drawable.ic_launcher);
+//        viewHolder.iconView.setImageResource(R.mipmap.ic_launcher);
         viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateString));
         viewHolder.descriptionView.setText(description);
 
         viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isMetric));
         viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
+
+        if(getItemViewType(cursor.getPosition()) == VIEW_TYPE_TODAY) {
+            int artResource = Utility.getArtResourceForWeatherCondition(cursor.getInt(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID)));
+            viewHolder.iconView.setImageResource(artResource);
+        } else {
+            int iconResource = Utility.getIconResourceForWeatherCondition(cursor.getInt(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID)));
+            viewHolder.iconView.setImageResource(iconResource);
+        }
     }
 
     /**
