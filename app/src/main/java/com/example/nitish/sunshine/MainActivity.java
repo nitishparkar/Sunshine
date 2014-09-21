@@ -1,26 +1,36 @@
 package com.example.nitish.sunshine;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ForecastFragment.Callback {
+
+    boolean mTowPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
-                    .commit();
+        if(findViewById(R.id.weather_detail_container) != null) {
+            mTowPane = true;
+            if (savedInstanceState == null) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.weather_detail_container, new DetailFragment())
+                        .commit();
+            }
+        } else {
+            mTowPane = false;
         }
     }
 
@@ -60,4 +70,25 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemSelected(String date) {
+        if(mTowPane) {
+            Log.i(">>>>>>>>>>>", "Two pane");
+
+            DetailFragment df = new DetailFragment();
+            Bundle args = new Bundle();
+            args.putString(DetailFragment.DATE_KEY, date);
+            df.setArguments(args);
+
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.weather_detail_container, df);
+            ft.commit();
+        } else {
+            Log.i(">>>>>>>>>>>", "One Pane");
+            Intent intent = new Intent(this, DetailActivity.class)
+                            .putExtra(DetailFragment.DATE_KEY, date);
+            startActivity(intent);
+        }
+    }
 }

@@ -18,11 +18,11 @@ package com.example.nitish.sunshine;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,6 +79,18 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public ForecastFragment() {
     }
 
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * Callback for when an item has been selected.
+         */
+        public void onItemSelected(String date);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,11 +118,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         // The SimpleCursorAdapter will take data from the database through the
         // Loader and use it to populate the ListView it's attached to.
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -123,9 +136,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = mForecastAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .putExtra(DetailFragment.DATE_KEY, cursor.getString(COL_WEATHER_DATE));
-                    startActivity(intent);
+                    Log.i(">>>>>>>>>>>", "Called fargment evt handlr");
+                    ((Callback) getActivity()).onItemSelected(cursor.getString(COL_WEATHER_DATE));
                 }
             }
         });
