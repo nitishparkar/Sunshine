@@ -38,6 +38,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
@@ -303,6 +304,18 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             int rowsInserted = context.getContentResolver()
                     .bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
             Log.v(LOG_TAG, "inserted " + rowsInserted + " rows of weather data");
+
+            // Remove Stale data
+            Calendar rightNow = Calendar.getInstance();
+            Date todaysDate = rightNow.getTime();
+
+            int rowsAffected = context.getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
+                    WeatherContract.WeatherEntry.COLUMN_DATETEXT + "< ?",
+                    new String[]{WeatherContract.getDbDateString(todaysDate)});
+
+            Log.d(LOG_TAG, ">>>>" + Integer.toString(rowsAffected) + " rows removed");
+
+
 // Use a DEBUG variable to gate whether or not you do this, so you can easily
 // turn it on and off, and so that it's easy to see what you can rip out if
 // you ever want to remove it.
