@@ -32,6 +32,10 @@
             android:parentActivityName=".MainActivity">
         </activity>
 
+        <service android:name=".service.SunshineService" />
+
+        <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
+
         <provider
             android:authorities="com.example.nitish.sunshine"
             android:name=".data.WeatherProvider" />
