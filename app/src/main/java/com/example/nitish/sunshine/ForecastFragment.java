@@ -15,13 +15,9 @@
  */
 package com.example.nitish.sunshine;
 
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -39,7 +35,7 @@ import android.widget.ListView;
 import com.example.nitish.sunshine.data.WeatherContract;
 import com.example.nitish.sunshine.data.WeatherContract.LocationEntry;
 import com.example.nitish.sunshine.data.WeatherContract.WeatherEntry;
-import com.example.nitish.sunshine.service.SunshineService;
+import com.example.nitish.sunshine.sync.SunshineSyncAdapter;
 
 import java.util.Date;
 
@@ -157,19 +153,21 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        String location = Utility.getPreferredLocation(getActivity());
-//        new FetchWeatherTask(getActivity()).execute(location);
-
-        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
-
-        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pi);
+//        String location = Utility.getPreferredLocation(getActivity());
+////        new FetchWeatherTask(getActivity()).execute(location);
+//
+//        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+//        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
+//
+//        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+//        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+//        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pi);
 
         /*Intent i = new Intent(getActivity(), SunshineService.class);
         i.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
         getActivity().startService(i);*/
+
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     @Override

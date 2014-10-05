@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.nitish.sunshine.sync.SunshineSyncAdapter;
+
 
 public class MainActivity extends Activity implements ForecastFragment.Callback {
 
@@ -32,6 +34,7 @@ public class MainActivity extends Activity implements ForecastFragment.Callback 
         } else {
             mTowPane = false;
         }
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
 
